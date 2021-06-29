@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.go.service.name }}
+  labels:
+    name: {{ .Values.go.service.name }}
+spec:
+  type: {{ .Values.go.service.type }}
+  ports:
+    - port: {{ .Values.go.service.port }}
+      targetPort: http
+      nodePort: 31100
+      protocol: TCP
+      name: http
+  selector:
+    name: "{{ .Values.go.pod.name }}{{ .Values.image.number}}"

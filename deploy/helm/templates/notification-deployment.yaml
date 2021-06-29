@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.notification.deployment.name }}
+  labels:
+    name: {{ .Values.notification.deployment.name }}
+spec:
+  replicas: {{ .Values.notification.deployment.replicaCount }}
+  selector:
+    matchLabels:
+      name: {{ .Values.notification.pod.name }}{{ .Values.image.number }}
+  template:
+    metadata:
+      name: "{{ .Values.notification.pod.name }}{{ .Values.image.number }}"
+      labels:
+        name: "{{ .Values.notification.pod.name }}{{ .Values.image.number }}"
+        imageNumber: "{{ .Values.image.number }}"      
+    spec:
+      containers:
+        - image: "us.icr.io/{{.Values.registry.namespace}}/{{.Values.notification.pod.name}}:{{ .Values.image.number }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: {{ .Values.notification.pod.name }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP          

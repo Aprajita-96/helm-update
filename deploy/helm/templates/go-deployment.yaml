@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.go.deployment.name }}
+  labels:
+    name: {{ .Values.go.deployment.name }}
+spec:
+  replicas: {{ .Values.go.deployment.replicaCount }}
+  selector:
+    matchLabels:
+      name: {{ .Values.go.pod.name }}{{ .Values.image.number }}
+  template:
+    metadata:
+      name: "{{ .Values.go.pod.name }}{{ .Values.image.number }}"
+      labels:
+        name: "{{ .Values.go.pod.name }}{{ .Values.image.number }}"
+        imageNumber: "{{ .Values.image.number }}"      
+    spec:
+      containers:
+        - image: "us.icr.io/{{.Values.registry.namespace}}/{{.Values.go.pod.name}}:{{ .Values.image.number }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: {{ .Values.go.pod.name }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP          
